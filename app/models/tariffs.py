@@ -14,6 +14,10 @@ class TariffBase(SQLModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     
+class Tariff(TariffBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
 
 
+class TariffRead(TariffBase):
+    id: int
 
