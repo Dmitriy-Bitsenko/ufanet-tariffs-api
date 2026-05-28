@@ -223,3 +223,4 @@ __marimo__/
 # md-files
 *.md
 
+sql_app.db
