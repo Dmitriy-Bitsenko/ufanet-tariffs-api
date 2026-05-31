@@ -1,12 +1,11 @@
-from fastapi.testclient import TestClient
+
 from sqlmodel import Session, SQLModel, create_engine
-from models.tariffs import Tariff
-from datetime import date
+from app.models.tariffs import Tariff
 import pytest
 
 
 @pytest.fixture
-def create_db():
+def session():
     engine = create_engine("sqlite://")
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
@@ -17,13 +16,25 @@ def create_db():
 
 
 
-def test_tariff(session: Session, client: TestClient):
+def test_create_and_read_tariff(session: Session):
+    dictionary_test = {
+            "name": "Игровой", "price": 450.00, "city": "Уфа", "speed_mbps": 120,
+            "description": "Для тех кто любит поиграть"
+            }
+
+    tariff_1 = Tariff(**dictionary_test)
+    session.add(tariff_1)
+    session.commit()
+    session.refresh(tariff_1)
+    retrieved_tariff = session.get(Tariff, tariff_1.id)
+
+    assert retrieved_tariff.id is not None
+    assert retrieved_tariff.name == "Игровой"
+    assert retrieved_tariff.price == 450.00
+    assert retrieved_tariff.city == "Уфа"
+    assert retrieved_tariff.speed_mbps == 120
+    assert retrieved_tariff.description == "Для тех кто любит поиграть"
+
     
 
-    assert id == 1
-    assert name == "Игровой"
-    assert price == 450.00
-    assert city == "Уфа"
-    assert speed_mbps == 120 
-    assert description == "Тариф"
-    assert created_at == date.datetime()
+
