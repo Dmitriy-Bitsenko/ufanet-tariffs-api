@@ -43,7 +43,8 @@ async def parse_detailed_tariff_page(tariff_url):
                 if strong and strong.text.strip() == "Интернет":
                     details = option.find_all("div", class_="detail")
                     price = int(details[1].text.split()[0])
-                    print(name, price)
+                    speed_mbs = int(details[0].text.split()[1])
+                    print(name, price, speed_mbs)
 
 
 async def main():
